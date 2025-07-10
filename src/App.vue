@@ -48,25 +48,59 @@ const addBookHandler = async () => {
   }
 };
 
+const deleteHandler = (bookId) => {
+  console.log("delete ", bookId);
+};
+
 onMounted(() => {
   fetchBooks();
 });
 </script>
 
 <template>
-  <form>
-    <label for="title">Book title:</label>
-    <input type="text" id="title" v-model="title" />
-    <label for="author">Author:</label>
-    <input type="text" id="author" v-model="author" />
-    <button @click.prevent="addBookHandler">Add Book</button>
-  </form>
-  <p v-if="error != ''">{{ error }}</p>
-  <ol>
-    <li v-for="book in books" :key="book.id">
-      {{ book.title }} by {{ book.author }}
-    </li>
-  </ol>
+  <div class="m-4">
+    <form>
+      <label for="title">Title:</label>
+      <input
+        type="text"
+        id="title"
+        v-model="title"
+        class="border-1 rounded-sm border-slate-400 ml-2"
+      />
+      <label for="author">Author:</label>
+      <input
+        type="text"
+        id="author"
+        v-model="author"
+        class="border-1 rounded-sm border-slate-400 ml-2"
+      />
+      <button
+        @click.prevent="addBookHandler"
+        class="h-full cursor-pointer bg-sky-400 rounded-sm px-4 text-white font-semibold"
+      >
+        Add Book
+      </button>
+    </form>
+    <p v-if="error != ''" class="mt-4 font-semibold text-red-400">
+      {{ error }}
+    </p>
+    <ul class="list-disc mt-4 pl-4">
+      <li v-for="book in books" :key="book.id">
+        <div class="flex space-x-2">
+          <p>
+            <i class="font-bold">{{ book.title }}</i> by {{ book.author }}
+          </p>
+          <button
+            @click="deleteHandler(book.id)"
+            :aria-label="`Delete ${book.title} by ${book.author}`"
+            class="text-slate-400 font-semibold hover:underline cursor-pointer"
+          >
+            Delete
+          </button>
+        </div>
+      </li>
+    </ul>
+  </div>
 </template>
 
 <style scoped></style>

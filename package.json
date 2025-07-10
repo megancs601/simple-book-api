@@ -10,8 +10,10 @@
     "backend": "node api/server.js"
   },
   "dependencies": {
+    "@tailwindcss/vite": "^4.1.11",
     "cors": "^2.8.5",
     "express": "^5.1.0",
+    "tailwindcss": "^4.1.11",
     "vue": "^3.5.17"
   },
   "devDependencies": {
