@@ -36,13 +36,13 @@ if (fs.existsSync(filePath)) {
 //   }, delay);
 // };
 
-// const saveBooks = async () => {
-//   try {
-//     await fsp.writeFile(filePath, JSON.stringify(books, null, 2), "utf-8");
-//   } catch (error) {
-//     console.error("Error saving books:", error);
-//   }
-// };
+const saveBooks = async () => {
+  try {
+    await fsp.writeFile(filePath, JSON.stringify(books, null, 2), "utf-8");
+  } catch (error) {
+    console.error("Error saving books:", error);
+  }
+};
 
 app.get("/", (req, res) => {
   res.send("📚 Book API is running. Use /books");
@@ -52,36 +52,37 @@ app.get("/books", (req, res) => {
   res.json(books);
 });
 
-// app.post("/books", async (req, res) => {
-//   const { title, author } = req.body;
-//   if (!title || !author) {
-//     const error = "Title and the author are required.";
-//     return res.status(400).json({ error });
-//   }
+app.post("/books", async (req, res) => {
+  const { title, author } = req.body;
+  if (!title || !author) {
+    const error = "Both book title and author are required.";
+    return res.status(400).json({ error });
+  }
 
-//   //check for duplicates first
-//   const isDuplicate = books.some(
-//     (book) =>
-//       book.title.toLowerCase() === title.toLowerCase() &&
-//       book.author.toLowerCase() === author.toLowerCase(),
-//   );
+  //check for duplicates first
+  const isDuplicate = books.some(
+    (book) =>
+      book.title.toLowerCase() === title.toLowerCase() &&
+      book.author.toLowerCase() === author.toLowerCase(),
+  );
 
-//   if (isDuplicate) {
-//     return res
-//       .status(409)
-//       .json({ error: "This book already exists in the library" });
-//   }
+  if (isDuplicate) {
+    return res
+      .status(409)
+      .json({ error: "This book already exists in the library." });
+  }
 
-//   const newBook = {
-//     id: Date.now().toString(),
-//     title,
-//     author,
-//   };
+  const newBook = {
+    id: Date.now().toString(),
+    title,
+    author,
+  };
 
-//   books.push(newBook);
-//   res.status(201).json(newBook);
-//   debounce(saveBooks);
-// });
+  books.push(newBook);
+  res.status(201).json(newBook);
+  saveBooks();
+  // debounce(saveBooks);
+});
 
 // app.put("/books/:id", async (req, res) => {
 //   const { id } = req.params;
