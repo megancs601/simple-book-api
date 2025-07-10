@@ -59,14 +59,7 @@ app.post("/books", async (req, res) => {
     return res.status(400).json({ error });
   }
 
-  //check for duplicates first
-  const isDuplicate = books.some(
-    (book) =>
-      book.title.toLowerCase() === title.toLowerCase() &&
-      book.author.toLowerCase() === author.toLowerCase(),
-  );
-
-  if (isDuplicate) {
+  if (isDuplicateBook({ title, author })) {
     return res
       .status(409)
       .json({ error: "This book already exists in the library." });
@@ -84,26 +77,37 @@ app.post("/books", async (req, res) => {
   // debounce(saveBooks);
 });
 
-app.put("/books/:id", async (req, res) => {
+app.patch("/books/:id", async (req, res) => {
   const { id } = req.params;
   const { title, author } = req.body;
-  const index = books.findIndex((book) => id === book.id);
+  const book = books.find((book) => id === book.id);
 
-  if (index === -1) {
-    return res.status(404).json({ error: "Book not found." });
+  if (!book) {
+    return res.status(404).json({ error: "book not found" });
   }
 
-  if (title) {
-    books[index].title = title;
+  if (!title || !author) {
+    const error = "Both book title and author are required.";
+    return res.status(400).json({ error });
   }
 
-  if (author) {
-    books[index].author = author;
+  if (isDuplicateBook({ title, author })) {
+    return res
+      .status(409)
+      .json({ error: "This book already exists in the library." });
   }
 
-  res.status(200).json(books[index]);
+  if (book.title != title) {
+    book.title = title;
+  }
+
+  if (book.author != author) {
+    book.author = author;
+  }
+
+  res.status(204).end();
   saveBooks();
-  // debounce(saveBooks);
+  //debounce(saveBooks);
 });
 
 app.delete("/books/:id", async (req, res) => {
@@ -124,3 +128,12 @@ app.delete("/books/:id", async (req, res) => {
 app.listen(PORT, () => {
   console.log(`server running on localhost:${PORT}`);
 });
+
+const isDuplicateBook = ({ title, author }) => {
+  return books.some((book) => {
+    const sameTitle = book.title.toLowerCase() === title.toLowerCase();
+    const sameAuthor = book.author.toLowerCase() === author.toLowerCase();
+
+    return sameTitle && sameAuthor;
+  });
+};

@@ -15,8 +15,11 @@ const editingTitle = ref("");
 const editingAuthor = ref("");
 
 const fetchBooks = async () => {
-  // reset error message
+  // reset
   error.value = "";
+  editingId.value = null;
+  title.value = "";
+  author.value = "";
 
   try {
     const res = await fetch(API_URL);
@@ -38,18 +41,14 @@ const addBookHandler = async () => {
     });
 
     if (res.ok) {
-      title.value = "";
-      author.value = "";
-
-      fetchBooks();
+      await fetchBooks();
     } else if (res.status === 409 || res.status === 400) {
       const data = await res.json();
+      console.log(data);
       error.value = data.error;
     }
   } catch (error) {
-    error.value =
-      "We could not add this book at this time. Please try again later.";
-    console.error("❌ Network or server error:", error);
+    showNetworkError({ error, action: "add" });
   }
 };
 
@@ -58,14 +57,11 @@ const deleteBookHandler = async (bookId) => {
     const res = await fetch(`${API_URL}/${bookId}`, { method: "DELETE" });
 
     if (res.ok) {
-      fetchBooks();
+      await fetchBooks();
     }
   } catch (error) {
-    error.value =
-      "We could not remove this book at this time. Please try again later.";
-    console.error("❌ Network or server error:", error);
+    showNetworkError({ error, action: "delete" });
   }
-  console.log("delete ", bookId);
 };
 
 const editBookHandler = async ({ id, title, author }) => {
@@ -74,17 +70,40 @@ const editBookHandler = async ({ id, title, author }) => {
   editingAuthor.value = author;
 };
 
-const saveEditingHandler = () => {
-  console.log("save called");
-  editingId.value = null;
+const saveEditingHandler = async ({ title, author }) => {
+  try {
+    const res = await fetch(`${API_URL}/${editingId.value}`, {
+      method: "PATCH",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        title,
+        author,
+      }),
+    });
+
+    if (res.ok) {
+      await fetchBooks();
+    } else if (res.status === 409 || res.status === 400) {
+      const data = await res.json();
+      error.value = data.error;
+    }
+  } catch (error) {
+    showNetworkError({ error, action: "edit" });
+  }
+};
+
+const showNetworkError = ({ error, action }) => {
+  error.value = `We could not ${action} this book at this time. Please try again later.`;
+  console.error("❌ Network or server error:", error);
 };
 
 const cancelEditingHandler = () => {
   editingId.value = null;
+  error.value = "";
 };
 
-onMounted(() => {
-  fetchBooks();
+onMounted(async () => {
+  await fetchBooks();
 });
 </script>
 
@@ -119,7 +138,6 @@ onMounted(() => {
       <li v-for="book in books" :key="book.id">
         <EditBook
           v-if="editingId === book.id"
-          :id="editingId"
           :title="editingTitle"
           :author="editingAuthor"
           :saveEdit="saveEditingHandler"
