@@ -14,8 +14,6 @@ const fetchBooks = async () => {
   try {
     const res = await fetch(API_URL);
     books.value = await res.json();
-
-    console.log("Fetched books:", books.value);
   } catch (error) {
     console.error("Fetch error:", error);
   }
@@ -48,7 +46,18 @@ const addBookHandler = async () => {
   }
 };
 
-const deleteHandler = (bookId) => {
+const deleteHandler = async (bookId) => {
+  try {
+    const res = await fetch(`${API_URL}/${bookId}`, { method: "DELETE" });
+
+    if (res.ok) {
+      fetchBooks();
+    }
+  } catch (error) {
+    error.value =
+      "We could not remove this book at this time. Please try again later.";
+    console.error("❌ Network or server error:", error);
+  }
   console.log("delete ", bookId);
 };
 
@@ -59,7 +68,7 @@ onMounted(() => {
 
 <template>
   <div class="m-4">
-    <form>
+    <form @submit.prevent="addBookHandler">
       <label for="title">Title:</label>
       <input
         type="text"
@@ -75,7 +84,7 @@ onMounted(() => {
         class="border-1 rounded-sm border-slate-400 ml-2"
       />
       <button
-        @click.prevent="addBookHandler"
+        type="submit"
         class="h-full cursor-pointer bg-sky-400 rounded-sm px-4 text-white font-semibold"
       >
         Add Book

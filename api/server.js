@@ -104,18 +104,19 @@ app.post("/books", async (req, res) => {
 //   debounce(saveBooks);
 // });
 
-// app.delete("/books/:id", async (req, res) => {
-//   const { id } = req.params;
-//   const index = books.findIndex((book) => id === book.id);
-//   if (index === -1) {
-//     const error = "Book not found";
-//     return res.status(404).json({ error });
-//   }
+app.delete("/books/:id", async (req, res) => {
+  const { id } = req.params;
+  const index = books.findIndex((book) => id === book.id);
+  if (index === -1) {
+    const error = "Book not found";
+    return res.status(404).json({ error });
+  }
 
-//   const deleted = books.splice(index, 1);
-//   res.json(deleted);
-//   debounce(saveBooks);
-// });
+  books.splice(index, 1);
+  res.status(204).end();
+  saveBooks();
+  //debounce(saveBooks);
+});
 
 app.listen(PORT, () => {
   console.log(`server running on localhost:${PORT}`);
