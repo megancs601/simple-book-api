@@ -84,29 +84,32 @@ app.post("/books", async (req, res) => {
   // debounce(saveBooks);
 });
 
-// app.put("/books/:id", async (req, res) => {
-//   const { id } = req.params;
-//   const { title, author } = req.body;
-//   const index = books.findIndex((book) => id === book.id);
-//   if (index === -1) {
-//     return res.status(404).json({ error: "Book not found." });
-//   }
+app.put("/books/:id", async (req, res) => {
+  const { id } = req.params;
+  const { title, author } = req.body;
+  const index = books.findIndex((book) => id === book.id);
 
-//   if (title !== undefined) {
-//     books[index].title = title;
-//   }
+  if (index === -1) {
+    return res.status(404).json({ error: "Book not found." });
+  }
 
-//   if (author !== undefined) {
-//     books[index].author = author;
-//   }
+  if (title) {
+    books[index].title = title;
+  }
 
-//   res.status(200).json(books[index]);
-//   debounce(saveBooks);
-// });
+  if (author) {
+    books[index].author = author;
+  }
+
+  res.status(200).json(books[index]);
+  saveBooks();
+  // debounce(saveBooks);
+});
 
 app.delete("/books/:id", async (req, res) => {
   const { id } = req.params;
   const index = books.findIndex((book) => id === book.id);
+
   if (index === -1) {
     const error = "Book not found";
     return res.status(404).json({ error });

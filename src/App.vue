@@ -1,11 +1,18 @@
 <script setup>
 import { onMounted, ref } from "vue";
+import EditBook from "./EditBook.vue";
+import Book from "./Book.vue";
 
 const API_URL = "http://localhost:3000/books";
 const books = ref([]);
+
 const title = ref("");
 const author = ref("");
 const error = ref("");
+
+const editingId = ref(null);
+const editingTitle = ref("");
+const editingAuthor = ref("");
 
 const fetchBooks = async () => {
   // reset error message
@@ -46,7 +53,7 @@ const addBookHandler = async () => {
   }
 };
 
-const deleteHandler = async (bookId) => {
+const deleteBookHandler = async (bookId) => {
   try {
     const res = await fetch(`${API_URL}/${bookId}`, { method: "DELETE" });
 
@@ -59,6 +66,21 @@ const deleteHandler = async (bookId) => {
     console.error("❌ Network or server error:", error);
   }
   console.log("delete ", bookId);
+};
+
+const editBookHandler = async ({ id, title, author }) => {
+  editingId.value = id;
+  editingTitle.value = title;
+  editingAuthor.value = author;
+};
+
+const saveEditingHandler = () => {
+  console.log("save called");
+  editingId.value = null;
+};
+
+const cancelEditingHandler = () => {
+  editingId.value = null;
 };
 
 onMounted(() => {
@@ -95,18 +117,22 @@ onMounted(() => {
     </p>
     <ul class="list-disc mt-4 pl-4">
       <li v-for="book in books" :key="book.id">
-        <div class="flex space-x-2">
-          <p>
-            <i class="font-bold">{{ book.title }}</i> by {{ book.author }}
-          </p>
-          <button
-            @click="deleteHandler(book.id)"
-            :aria-label="`Delete ${book.title} by ${book.author}`"
-            class="text-slate-400 font-semibold hover:underline cursor-pointer"
-          >
-            Delete
-          </button>
-        </div>
+        <EditBook
+          v-if="editingId === book.id"
+          :id="editingId"
+          :title="editingTitle"
+          :author="editingAuthor"
+          :saveEdit="saveEditingHandler"
+          :cancelEdit="cancelEditingHandler"
+        />
+        <Book
+          v-else
+          :id="book.id"
+          :title="book.title"
+          :author="book.author"
+          :editHandler="editBookHandler"
+          :deleteHandler="deleteBookHandler"
+        />
       </li>
     </ul>
   </div>
