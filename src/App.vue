@@ -9,7 +9,7 @@ const books = ref([]);
 
 const title = ref("");
 const author = ref("");
-const error = ref("");
+const errorMsg = ref("");
 
 const editingId = ref(null);
 const editingTitle = ref("");
@@ -17,7 +17,7 @@ const editingAuthor = ref("");
 
 const fetchBooks = async () => {
   // reset
-  error.value = "";
+  errorMsg.value = "";
   editingId.value = null;
   title.value = "";
   author.value = "";
@@ -26,6 +26,7 @@ const fetchBooks = async () => {
     const res = await fetch(API_URL);
     books.value = await res.json();
   } catch (error) {
+    errorMsg.value = "There is a network or server error.";
     console.error("Fetch error:", error);
   }
 };
@@ -46,7 +47,7 @@ const addBookHandler = async () => {
     } else if (res.status === 409 || res.status === 400) {
       const data = await res.json();
       console.log(data);
-      error.value = data.error;
+      errorMsg.value = data.error;
     }
   } catch (error) {
     showNetworkError({ error, action: "add" });
@@ -86,7 +87,7 @@ const saveEditingHandler = async ({ title, author }) => {
       await fetchBooks();
     } else if (res.status === 409 || res.status === 400) {
       const data = await res.json();
-      error.value = data.error;
+      errorMsg.value = data.error;
     }
   } catch (error) {
     showNetworkError({ error, action: "edit" });
@@ -94,13 +95,13 @@ const saveEditingHandler = async ({ title, author }) => {
 };
 
 const showNetworkError = ({ error, action }) => {
-  error.value = `We could not ${action} this book at this time. Please try again later.`;
+  errorMsg.value = `We could not ${action} this book at this time. Please try again later.`;
   console.error("❌ Network or server error:", error);
 };
 
 const cancelEditingHandler = () => {
   editingId.value = null;
-  error.value = "";
+  errorMsg.value = "";
 };
 
 onMounted(async () => {
@@ -139,11 +140,11 @@ onMounted(async () => {
         Add
       </button>
     </form>
-    <p v-if="error != ''" class="mt-4 font-semibold text-red-400">
-      {{ error }}
+    <p class="mt-4 font-semibold text-red-400">
+      {{ errorMsg }}
     </p>
     <ul
-      class="shadow-lg shadow-stone-900/15 rounded-sm bg-white grid grid-flow-row mt-4"
+      class="border-[1px] border-stone-600/10 shadow-lg shadow-stone-900/15 rounded-sm bg-white grid grid-flow-row mt-4"
     >
       <li
         v-for="book in books"
