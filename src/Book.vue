@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 
 const props = defineProps({
   id: { type: String },
@@ -11,24 +11,28 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="flex space-x-2 items-center">
+  <div class="group flex space-x-2 items-center">
     <p class="handwritten text-lg">
       <span class="text-3xl mr-2">&#8226;</span>
       <i class="font-bold">{{ title }}</i> by {{ author }}
     </p>
-    <button
-      @click="editHandler({ id, title, author })"
-      :aria-label="`Edit ${title} by ${author}`"
-      class="text-slate-400 font-semibold cursor-pointer hover:underline leading-[37px] hover:text-sky-500"
+    <span
+      class="space-x-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity"
     >
-      Edit
-    </button>
-    <button
-      @click="deleteHandler(id)"
-      :aria-label="`Delete ${title} by ${author}`"
-      class="text-slate-400 font-semibold cursor-pointer hover:underline leading-[37px] hover:text-red-600"
-    >
-      Delete
-    </button>
+      <button
+        @click="editHandler({ id, title, author })"
+        :aria-label="`Edit ${title} by ${author}`"
+        class="text-slate-400 font-semibold cursor-pointer hover:underline leading-[37px] px-1 hover:text-sky-500 rounded-sm"
+      >
+        Edit
+      </button>
+      <button
+        @click="deleteHandler(id)"
+        :aria-label="`Delete ${title} by ${author}`"
+        class="text-slate-400 font-semibold cursor-pointer hover:underline leading-[37px] px-1 hover:text-red-600 rounded-sm"
+      >
+        Delete
+      </button>
+    </span>
   </div>
 </template>
