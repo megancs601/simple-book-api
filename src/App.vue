@@ -144,6 +144,7 @@ onMounted(async () => {
       {{ errorMsg }}
     </p>
     <ul
+      v-if="books.length"
       class="border-[1px] border-stone-600/10 shadow-lg shadow-stone-900/15 rounded-sm bg-white grid grid-flow-row mt-4"
     >
       <li

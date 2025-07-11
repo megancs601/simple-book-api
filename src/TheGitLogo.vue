@@ -1,6 +1,6 @@
 <template>
   <a
-    href="https://github.com/megancs601/simple-book-api-frontend"
+    href="https://github.com/megancs601/simple-book-api"
     target="_blank"
     rel="noopener"
     class="p-4 flex items-center justify-end"
