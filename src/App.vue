@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import EditBook from "./EditBook.vue";
 import Book from "./Book.vue";
 import TheGitLogo from "./TheGitLogo.vue";
+import TheBlankList from "./TheBlankList.vue";
 
 const API_URL = "http://localhost:3000/books";
 const books = ref([]);
@@ -169,6 +170,7 @@ onMounted(async () => {
         />
       </li>
     </ul>
+    <TheBlankList v-else />
   </div>
 </template>
 
