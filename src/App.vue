@@ -146,7 +146,7 @@ onMounted(async () => {
       <li
         v-for="book in books"
         :key="book.id"
-        class="border-b-[1px] border-sky-600/40 px-4 py-2 last:border-none last:pb-6 first:pt-4"
+        class="border-b-[1px] border-sky-600/40 px-4 py-2 last:border-none last:pb-5 first:pt-4"
       >
         <EditBook
           v-if="editingId === book.id"

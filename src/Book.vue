@@ -12,9 +12,9 @@ const props = defineProps({
 
 <template>
   <div class="group flex space-x-2 items-center">
-    <p class="handwritten text-lg">
-      <span class="text-3xl mr-2">&#8226;</span>
-      <i class="font-bold">{{ title }}</i> by {{ author }}
+    <p class="font-mono text-xl">
+      <span class="text-2xl mr-2">&#8226;</span>
+      <i>{{ title }}</i> by {{ author }}
     </p>
     <span
       class="space-x-2 opacity-0 group-hover:opacity-100 focus-within:opacity-100 transition-opacity"
