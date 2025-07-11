@@ -2,6 +2,7 @@
 import { onMounted, ref } from "vue";
 import EditBook from "./EditBook.vue";
 import Book from "./Book.vue";
+import TheGitLogo from "./TheGitLogo.vue";
 
 const API_URL = "http://localhost:3000/books";
 const books = ref([]);
@@ -108,6 +109,7 @@ onMounted(async () => {
 </script>
 
 <template>
+  <TheGitLogo />
   <div class="m-auto mt-12 w-3xl">
     <h1 class="text-2xl font-medium text-amber-950 font-mono">Add Book:</h1>
     <form
@@ -132,7 +134,7 @@ onMounted(async () => {
       />
       <button
         type="submit"
-        class="w-20 cursor-pointer bg-sky-400 rounded-sm text-white font-semibold leading-[34px] col-auto hover:bg-amber-950"
+        class="w-20 cursor-pointer bg-amber-950 rounded-sm text-white font-semibold leading-[34px] col-auto hover:bg-sky-400"
       >
         Add
       </button>
