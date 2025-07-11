@@ -108,34 +108,46 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="m-4">
-    <form @submit.prevent="addBookHandler">
-      <label for="title">Title:</label>
+  <div class="m-auto mt-12 w-3xl">
+    <h1 class="text-2xl font-medium text-amber-950 font-mono">Add Book:</h1>
+    <form
+      @submit.prevent="addBookHandler"
+      class="grid grid-flow-row grid-cols-3 gap-2"
+    >
       <input
         type="text"
+        aria-label="Book Title"
         id="title"
         v-model="title"
-        class="border-1 rounded-sm border-slate-400 ml-2"
+        placeholder="Title"
+        class="border-1 rounded-sm border-slate-400 p-1 placeholder:text-gray-400 bg-white placeholder:italic"
       />
-      <label for="author">Author:</label>
       <input
         type="text"
+        aria-label="Book Author"
         id="author"
         v-model="author"
-        class="border-1 rounded-sm border-slate-400 ml-2"
+        placeholder="Author"
+        class="border-1 rounded-sm border-slate-400 p-1 placeholder:text-gray-400 bg-white placeholder:italic"
       />
       <button
         type="submit"
-        class="h-full cursor-pointer bg-sky-400 rounded-sm px-4 text-white font-semibold"
+        class="w-20 cursor-pointer bg-sky-400 rounded-sm text-white font-semibold leading-[34px] col-auto hover:bg-amber-950"
       >
-        Add Book
+        Add
       </button>
     </form>
     <p v-if="error != ''" class="mt-4 font-semibold text-red-400">
       {{ error }}
     </p>
-    <ul class="list-disc mt-4 pl-4">
-      <li v-for="book in books" :key="book.id">
+    <ul
+      class="shadow-lg shadow-stone-900/15 rounded-sm bg-white grid grid-flow-row mt-4"
+    >
+      <li
+        v-for="book in books"
+        :key="book.id"
+        class="border-b-[1px] border-sky-600/40 px-4 py-2 last:border-none last:pb-6 first:pt-4"
+      >
         <EditBook
           v-if="editingId === book.id"
           :title="editingTitle"

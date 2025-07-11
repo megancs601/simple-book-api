@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+body {
+  background: whitesmoke;
+}
+
+.handwritten {
+  font-family: "Gloria Hallelujah", cursive;
+}
