@@ -5,7 +5,8 @@ import Book from "./Book.vue";
 import TheGitLogo from "./TheGitLogo.vue";
 import TheBlankList from "./TheBlankList.vue";
 
-const API_URL = "http://localhost:3000/books";
+const API_URL = `${import.meta.env.VITE_API_URL}/books`;
+
 const books = ref([]);
 
 const title = ref("");
@@ -45,7 +46,7 @@ const addBookHandler = async () => {
 
     if (res.ok) {
       await fetchBooks();
-    } else if (res.status === 409 || res.status === 400) {
+    } else if (res.status === 409 || res.status === 400 || res.status === 500) {
       const data = await res.json();
       console.log(data);
       errorMsg.value = data.error;
@@ -86,7 +87,7 @@ const saveEditingHandler = async ({ title, author }) => {
 
     if (res.ok) {
       await fetchBooks();
-    } else if (res.status === 409 || res.status === 400) {
+    } else if (res.status === 409 || res.status === 400 || res.status === 500) {
       const data = await res.json();
       errorMsg.value = data.error;
     }
@@ -97,7 +98,7 @@ const saveEditingHandler = async ({ title, author }) => {
 
 const showNetworkError = ({ error, action }) => {
   errorMsg.value = `We could not ${action} this book at this time. Please try again later.`;
-  console.error("❌ Network or server error:", error);
+  console.error("Network or server error:", error);
 };
 
 const cancelEditingHandler = () => {
