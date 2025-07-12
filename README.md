@@ -34,10 +34,10 @@ pnpm install
 pnpm run dev
 ```
 
-### Run API Server
+### Run Server
 
 ```sh
-pnpm run backend
+pnpm run dev:server
 ```
 
 ### Build
