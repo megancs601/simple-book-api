@@ -18,10 +18,20 @@ const client = await pool.connect();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://megancs601.github.io",
+];
+
 app.use(
   cors({
-    origin: "https://megancs601.github.io",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   }),
 );
 app.use(json());
