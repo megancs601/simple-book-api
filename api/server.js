@@ -16,9 +16,14 @@ const client = await pool.connect();
 
 // REST API
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://megancs601.github.io",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+  }),
+);
 app.use(json());
 
 app.get("/", (req, res) => {
