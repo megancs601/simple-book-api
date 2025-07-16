@@ -4,8 +4,10 @@ import EditBook from "./EditBook.vue";
 import Book from "./Book.vue";
 import TheGitLogo from "./TheGitLogo.vue";
 import TheBlankList from "./TheBlankList.vue";
+import TheAddBookForm from "./TheAddBookForm.vue";
 
-const API_URL = "http://localhost:3000/books";
+const API_URL = `${import.meta.env.VITE_API_URL}/books`;
+
 const books = ref([]);
 
 const title = ref("");
@@ -45,7 +47,7 @@ const addBookHandler = async () => {
 
     if (res.ok) {
       await fetchBooks();
-    } else if (res.status === 409 || res.status === 400) {
+    } else if (res.status === 409 || res.status === 400 || res.status === 500) {
       const data = await res.json();
       console.log(data);
       errorMsg.value = data.error;
@@ -86,7 +88,7 @@ const saveEditingHandler = async ({ title, author }) => {
 
     if (res.ok) {
       await fetchBooks();
-    } else if (res.status === 409 || res.status === 400) {
+    } else if (res.status === 409 || res.status === 400 || res.status === 500) {
       const data = await res.json();
       errorMsg.value = data.error;
     }
@@ -97,7 +99,7 @@ const saveEditingHandler = async ({ title, author }) => {
 
 const showNetworkError = ({ error, action }) => {
   errorMsg.value = `We could not ${action} this book at this time. Please try again later.`;
-  console.error("❌ Network or server error:", error);
+  console.error("Network or server error:", error);
 };
 
 const cancelEditingHandler = () => {
@@ -114,33 +116,11 @@ onMounted(async () => {
   <TheGitLogo />
   <div class="m-auto mt-12 w-3xl">
     <h1 class="text-2xl font-medium text-amber-950 font-mono">Add Book:</h1>
-    <form
-      @submit.prevent="addBookHandler"
-      class="grid grid-flow-row grid-cols-3 gap-2"
-    >
-      <input
-        type="text"
-        aria-label="Book Title"
-        id="title"
-        v-model="title"
-        placeholder="Title"
-        class="border-1 rounded-sm border-slate-400 p-1 placeholder:text-gray-400 bg-white placeholder:italic"
-      />
-      <input
-        type="text"
-        aria-label="Book Author"
-        id="author"
-        v-model="author"
-        placeholder="Author"
-        class="border-1 rounded-sm border-slate-400 p-1 placeholder:text-gray-400 bg-white placeholder:italic"
-      />
-      <button
-        type="submit"
-        class="w-20 cursor-pointer bg-amber-950 rounded-sm text-white font-semibold leading-[34px] col-auto hover:bg-sky-400"
-      >
-        Add
-      </button>
-    </form>
+    <TheAddBookForm
+      v-model:title="title"
+      v-model:author="author"
+      @submit="addBookHandler"
+    />
     <p class="mt-4 font-semibold text-red-400">
       {{ errorMsg }}
     </p>

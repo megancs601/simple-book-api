@@ -34,10 +34,10 @@ pnpm install
 pnpm run dev
 ```
 
-### Run API Server
+### Run Server
 
 ```sh
-pnpm run backend
+pnpm run dev:server
 ```
 
 ### Build
@@ -55,3 +55,9 @@ pnpm run deploy
 ## 🔜 To-Do
 
 - Component tests
+
+## 📌 Notes
+
+- This project uses PostgreSQL as the database engine to store book records.
+- The PostgreSQL database is hosted on AlwaysData, a managed web hosting provider that supports external database access.
+- All API operations (add, delete, update, and fetch books) are backed by SQL queries executed against this remote PostgreSQL instance.
